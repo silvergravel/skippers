@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <script src="jquery.min.js"></script>
+  </head>
+  <body>
+
+    <button onclick = "myFunction()">ON</button>
+    <button onclick = "myFunction_2()">OFF</button>
+    <script>
+
+      function myFunction()
+      {
+        $.ajaxSetup({timeout:500});
+      	esp_ip = "192.168.2.95";
+      	ArduinoVar = "http://" + esp_ip + ":80";
+      	$.get( ArduinoVar, { led: "1" })	;
+      }
+        function myFunction_2()
+        {
+          $.ajaxSetup({timeout:500});
+        	esp_ip = "192.168.2.95";
+        	ArduinoVar = "http://" + esp_ip + ":80";
+        	$.get( ArduinoVar, { led: "0" })	;
+      	{Connection: close};
+      }
+    </script>
+  </body>
+</html>

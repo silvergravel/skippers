@@ -1,0 +1,29 @@
+{
+  "manifest_version": 2,
+
+  "name": "Save URL_2",
+  "description": "TestingContentScripts",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "Click here!"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://*.facebook.com/","https://*.facebook.com/*"],
+      "js": ["blacklisted.js"]
+    },
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": ["https://*.facebook.com/","https://*.facebook.com/*"],
+      "js": ["notBlacklisted.js"]
+    }
+  ],
+
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ]
+}

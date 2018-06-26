@@ -1,0 +1,18 @@
+{
+  "name": "upsetBotExtension_tempName",
+  "description": "complains to upset bot whenever you visit blacklisted social media websites",
+  "version": "2.0",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "http://*/*"
+  ],
+  "background": {
+    "scripts": ["jquery.min.js","background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_title": "Need to get rid of this icon"
+  },
+  "manifest_version": 2
+}

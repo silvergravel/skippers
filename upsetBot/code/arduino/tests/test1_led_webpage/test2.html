@@ -1,0 +1,19 @@
+<html>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<button onclick="myFunction()">Click me</button>
+
+<script>
+
+function myFunction(){
+  axios.get("http://192.168.2.95:80", {pin: "11"})
+  .then(function(response){
+    console.log(response.data); // ex.: { user: 'Your User'}
+    console.log(response.status); // ex.: 200
+  });
+
+
+}
+
+</script>
+</html>

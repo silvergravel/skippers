@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  </head>
+  <body>
+
+    <button onclick = "myFunction()">turn ON</button>
+    <button onclick = "myFunction_2()">turn OFF</button>
+
+    <script>
+      function myFunction()
+      {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "http://192.168.2.95:80/?led=1", true);
+        xhr.send();
+      }
+
+      function myFunction_2()
+      {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "http://192.168.2.95:80/?led=0", true);
+        xhr.send();
+      }
+    </script>
+  </body>
+</html>
