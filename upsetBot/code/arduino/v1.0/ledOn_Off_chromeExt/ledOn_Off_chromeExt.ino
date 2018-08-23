@@ -2,8 +2,10 @@
 
 #define DEBUG true
 
-
-
+#include <Servo.h>
+Servo myservo;  // create servo object to control a servo
+int pos = 0;
+bool headshake = false;
 
 SoftwareSerial esp8266(8, 9); // make RX Arduino line is pin 8, make TX Arduino line is pin 9.
 // This means that you need to connect the TX line from the esp to the Arduino's pin 2
@@ -13,14 +15,14 @@ void setup()
   Serial.begin(9600);
   esp8266.begin(9600); // your esp's baud rate might be different
 
-  pinMode(11, OUTPUT);
-  digitalWrite(11, LOW);
-
-  pinMode(12, OUTPUT);
-  digitalWrite(12, LOW);
+  myservo.attach(3);  // attaches the servo on pin 3
+  myservo.write(90);  // set the servo to its middle (head must be in the middle when idle)
 
   pinMode(13, OUTPUT);
   digitalWrite(13, LOW);
+
+  pinMode(12, OUTPUT);
+  digitalWrite(12, HIGH);
 
   sendData("AT+RST\r\n", 2000, DEBUG); // reset module
   sendData("AT+CWMODE=3\r\n", 1000, DEBUG); // configure as access point
@@ -41,7 +43,7 @@ void loop()
 
 
     if (esp8266.find("+IPD,"))
-    Serial.println("esp is saying IPD");
+      Serial.println("esp is saying IPD");
     {
 
       if (esp8266.overflow()) {
@@ -59,15 +61,18 @@ void loop()
       esp8266.find("led="); // advance cursor to "pin="
 
 
-      int command = (esp8266.read() - 48); // get number (either 0 or 1) 
+      int command = (esp8266.read() - 48); // get number (either 0 or 1)
 
-     if(command == 0){
-        digitalWrite(11,LOW);
+      if (command == 0) {
+        digitalWrite(13, LOW);
+        headshake = false;
         Serial.println("turn led OFF!");
-      }else if (command == 1){
-        digitalWrite(11,HIGH);
+        
+      } else if (command == 1) {
+        digitalWrite(13, HIGH);
+        headshake = true;
         Serial.println("turn led ON!");
-        }
+      }
 
       // make close command
       String closeCommand = "AT+CIPCLOSE=";
@@ -77,6 +82,34 @@ void loop()
       sendData(closeCommand, 1000, DEBUG); // close connection
     }
   }
+  
+  if (headshake == true) {
+            digitalWrite(12, LOW);
+
+    /*****************the headshake****************/
+
+    for (int i = 45; i >= 10 ; i -= i / 5) { //some math to exponentially decrease head's angle of deviation
+      for (pos = 90; pos <= 90 + i; pos += 1) { //turn left
+        myservo.write(pos);
+        delay(5);
+      }
+      for (pos = 90 + i; pos >= 90 - i; pos -= 1) { //tu rn right
+        myservo.write(pos);
+        delay(5);
+      }
+      for (pos = 90 - i; pos <= 90; pos += 1) { //come back to center
+        myservo.write(pos);
+        delay(5);
+      }
+    }
+
+    /*****************the headshake****************/
+  } else{
+            digitalWrite(12, HIGH);
+
+    myservo.write(90);
+    }
+    
 }
 
 /*
